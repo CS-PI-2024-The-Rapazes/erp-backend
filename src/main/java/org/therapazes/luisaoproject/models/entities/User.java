@@ -1,4 +1,4 @@
-package org.therapazes.luisaoproject.models;
+package org.therapazes.luisaoproject.models.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

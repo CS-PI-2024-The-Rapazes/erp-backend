@@ -1,4 +1,4 @@
-package org.therapazes.luisaoproject.config;
+package org.therapazes.luisaoproject.config.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -13,9 +13,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.therapazes.luisaoproject.config.auth.JwtAuthenticationFilter;
 
 import java.util.Arrays;
-//Filtro das requests http
 @Configuration
 @EnableWebSecurity()
 @RequiredArgsConstructor

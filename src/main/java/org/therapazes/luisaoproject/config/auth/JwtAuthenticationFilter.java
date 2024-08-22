@@ -1,4 +1,4 @@
-package org.therapazes.luisaoproject.config;
+package org.therapazes.luisaoproject.config.auth;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -13,9 +13,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.therapazes.luisaoproject.services.JwtService;
 
 import java.io.IOException;
-//FilterJwt que se e usado na FilterChain que se encontra em SecurityConfiguration.java
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {

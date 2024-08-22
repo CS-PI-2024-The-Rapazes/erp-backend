@@ -1,14 +1,12 @@
-package org.therapazes.luisaoproject.config.auth;
+package org.therapazes.luisaoproject.models.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-//Formato da resposta enviada pra o controller AuthenticationController
 @Data
 @Builder
 @AllArgsConstructor
 public class AuthenticationRequest {
-	
 	private String email;
 	private String password;
 }

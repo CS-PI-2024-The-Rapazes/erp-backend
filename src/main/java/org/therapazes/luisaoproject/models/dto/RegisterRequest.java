@@ -1,4 +1,4 @@
-package org.therapazes.luisaoproject.config.auth;
+package org.therapazes.luisaoproject.models.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
