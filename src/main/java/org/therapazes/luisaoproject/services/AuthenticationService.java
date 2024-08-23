@@ -6,10 +6,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.therapazes.luisaoproject.models.dto.RegisterRequest;
-import org.therapazes.luisaoproject.models.dto.AuthenticationRequest;
-import org.therapazes.luisaoproject.models.dto.AuthenticationResponse;
-import org.therapazes.luisaoproject.models.entities.User;
+import org.therapazes.luisaoproject.config.auth.JwtUtil;
+import org.therapazes.luisaoproject.dto.AuthenticationRequestDto;
+import org.therapazes.luisaoproject.dto.AuthenticationResponseDto;
+import org.therapazes.luisaoproject.dto.RegisterRequestDto;
+import org.therapazes.luisaoproject.entities.User;
 import org.therapazes.luisaoproject.repositories.UserRepository;
 
 @Service
@@ -18,10 +19,10 @@ public class AuthenticationService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
+    private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationResponse register(RegisterRequest request) throws EntityExistsException {
+    public AuthenticationResponseDto register(RegisterRequestDto request) throws EntityExistsException {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new EntityExistsException("Email already registered");
         }
@@ -31,17 +32,17 @@ public class AuthenticationService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         userRepository.save(user);
 
-        var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
+        var jwtToken = jwtUtil.generateToken(user);
+        return AuthenticationResponseDto.builder()
                 .token(jwtToken)
                 .build();
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+    public AuthenticationResponseDto authenticate(AuthenticationRequestDto request) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow(RuntimeException::new);
-        var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
+        var jwtToken = jwtUtil.generateToken(user);
+        return AuthenticationResponseDto.builder()
                 .token(jwtToken)
                 .build();
     }

@@ -1,8 +1,6 @@
-package org.therapazes.luisaoproject.models.entities;
+package org.therapazes.luisaoproject.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,12 +14,16 @@ import java.util.Collection;
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_user")
+    @Column(name = "idUser")
     private Integer idUser;
     @Column(name = "email")
     private String email;
     @Column(name = "password")
     private String password;
+    @Column(name = "active")
+    private Boolean active;
+    @OneToOne(mappedBy = "user")
+    private ForgotPassword forgotPassword;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

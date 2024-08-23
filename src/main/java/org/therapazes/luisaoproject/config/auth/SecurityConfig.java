@@ -13,13 +13,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.therapazes.luisaoproject.config.auth.JwtAuthenticationFilter;
 
 import java.util.Arrays;
+import java.util.List;
+
 @Configuration
 @EnableWebSecurity()
 @RequiredArgsConstructor
-public class SecurityConfiguration {
+public class SecurityConfig {
 
 	private final JwtAuthenticationFilter jwtAuthFilter;
 	private final AuthenticationProvider authenticationProvider;
@@ -39,9 +40,9 @@ public class SecurityConfiguration {
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 	    CorsConfiguration configuration = new CorsConfiguration();
-	    configuration.setAllowedOrigins(Arrays.asList("*"));
-	    configuration.setAllowedMethods(Arrays.asList("*"));
-	    configuration.setAllowedHeaders(Arrays.asList("*"));
+	    configuration.setAllowedOrigins(List.of("*"));
+	    configuration.setAllowedMethods(List.of("*"));
+	    configuration.setAllowedHeaders(List.of("*"));
 	    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 	    source.registerCorsConfiguration("/**", configuration);
 	    return source;
