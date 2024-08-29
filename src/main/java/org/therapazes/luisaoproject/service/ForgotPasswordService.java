@@ -1,5 +1,6 @@
 package org.therapazes.luisaoproject.service;
 
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,9 +13,7 @@ import org.therapazes.luisaoproject.repositories.UserRepository;
 import org.therapazes.luisaoproject.utils.ChangePassword;
 
 import java.time.Instant;
-import java.util.Date;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -25,22 +24,20 @@ public class ForgotPasswordService {
     private final ForgotPasswordRepository forgotPasswordRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public String verifyEmail(String email) {
+    public String verifyEmail(String email) throws MessagingException {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Coloque um email válido!"));
 
-        MailBody mailBody = MailBody.builder()
-                .to(email)
-                .text("Este é o código para recuperar a senha:" + otpGenerator())
-                .subject("Código para recuperar senha")
-                .build();
+        Integer otp = otpGenerator();
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("otp", otp);
 
         ForgotPassword fp = ForgotPassword.builder()
-                .otp(otpGenerator())
-                .expirationTime(new Date(System.currentTimeMillis() + 70 * 1000)) //1 MINUTO E 10SEGUNDOS
+                .otp(otp)
+                .expirationTime(new Date(System.currentTimeMillis() + 70 * 1000)) // 1 MINUTO E 10 SEGUNDOS
                 .user(user)
                 .build();
 
-        emailService.sendSimpleMessage(mailBody);
+        emailService.sendEmailWithTemplate(email, "Código para recuperar senha", variables);
         forgotPasswordRepository.save(fp);
 
         return "Código enviado!";

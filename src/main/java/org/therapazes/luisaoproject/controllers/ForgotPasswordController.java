@@ -1,5 +1,6 @@
 package org.therapazes.luisaoproject.controllers;
 
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,8 @@ public class ForgotPasswordController {
             return ResponseEntity.ok(forgotPasswordService.verifyEmail(email));
         } catch (UsernameNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
         }
 
     }
