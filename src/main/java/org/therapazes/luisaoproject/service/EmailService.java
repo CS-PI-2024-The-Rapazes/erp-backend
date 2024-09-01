@@ -2,6 +2,7 @@ package org.therapazes.luisaoproject.service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -39,6 +40,7 @@ public class EmailService {
         sendEmail(mailBody);
     }
 
+    @Async
     public void sendEmail(MailBody mailBody) throws MessagingException {
         if (mailBody.isHtml()) {
             MimeMessage message = javaMailSender.createMimeMessage();
@@ -48,17 +50,27 @@ public class EmailService {
                 helper.setTo(mailBody.to());
                 helper.setSubject(mailBody.subject());
                 helper.setText(mailBody.text(), true); // true for HTML
+
+                ClassPathResource imageResource = new ClassPathResource("static/images/logoCoxinha.png");
+
+                helper.addInline("logo", imageResource, "image/png");
+
                 javaMailSender.send(message);
+
             } catch (MessagingException e) {
                 e.printStackTrace();
             }
+
         } else {
             SimpleMailMessage message = new SimpleMailMessage();
+
             message.setTo(mailBody.to());
             message.setSubject(mailBody.subject());
             message.setText(mailBody.text());
+
             javaMailSender.send(message);
         }
     }
+
 }
 

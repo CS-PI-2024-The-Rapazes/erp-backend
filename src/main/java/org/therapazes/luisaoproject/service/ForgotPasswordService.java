@@ -2,17 +2,16 @@ package org.therapazes.luisaoproject.service;
 
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.therapazes.luisaoproject.dto.MailBody;
 import org.therapazes.luisaoproject.entities.ForgotPassword;
 import org.therapazes.luisaoproject.entities.User;
 import org.therapazes.luisaoproject.repositories.ForgotPasswordRepository;
 import org.therapazes.luisaoproject.repositories.UserRepository;
-import org.therapazes.luisaoproject.utils.ChangePassword;
+import org.therapazes.luisaoproject.dto.ChangePassword;
 
-import java.time.Instant;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -24,52 +23,51 @@ public class ForgotPasswordService {
     private final ForgotPasswordRepository forgotPasswordRepository;
     private final PasswordEncoder passwordEncoder;
 
+
     public String verifyEmail(String email) throws MessagingException {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Coloque um email válido!"));
+        String randomID = UUID.randomUUID().toString();
 
-        Integer otp = otpGenerator();
+        String recoveryURL = "http://localhost:8080/user/account-recovery?email=" + email + "&sec=" + randomID;
+
         Map<String, Object> variables = new HashMap<>();
-        variables.put("otp", otp);
+        variables.put("otp", recoveryURL);
 
-        ForgotPassword fp = ForgotPassword.builder()
-                .otp(otp)
-                .expirationTime(new Date(System.currentTimeMillis() + 70 * 1000)) // 1 MINUTO E 10 SEGUNDOS
-                .user(user)
-                .build();
 
-        emailService.sendEmailWithTemplate(email, "Código para recuperar senha", variables);
-        forgotPasswordRepository.save(fp);
+        forgotPasswordRepository.findByUserEmail(email).ifPresentOrElse(e -> {e.setCode(randomID);
+            e.setExpirationTime(new Date(System.currentTimeMillis() + 70 * 1000));
+            forgotPasswordRepository.save(e);
+            }, () -> {
+            User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Coloque um email válido!"));
+
+            ForgotPassword fp = ForgotPassword.builder()
+                    .code(randomID)
+                    .expirationTime(new Date(System.currentTimeMillis() + 70 * 1000)) // 1 MINUTO E 10 SEGUNDOS
+                    .user(user)
+                    .build();
+            forgotPasswordRepository.save(fp);
+        });
+
+        try {
+            emailService.sendEmailWithTemplate(email, "Código para recuperar senha", variables);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
 
         return "Código enviado!";
     }
 
-    private Integer otpGenerator() {
-        Random random = new Random();
-        return random.nextInt(100_000, 999_999); //6 digitos aleatorios entre esses valores
-    }
+    public String changePasswordHandler(ChangePassword changePassword) {
+        ForgotPassword fp = forgotPasswordRepository.findByUserEmail(changePassword.email()).orElseThrow(() -> new UsernameNotFoundException("Coloque um email válido!"));
 
-    public String verifyOtp(Integer otp, String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Coloque um email válido!"));
+        if(fp.getCode().equals(changePassword.code())) {
+            String encodedPassword = passwordEncoder.encode(changePassword.password());
+            userRepository.updatePassoword(changePassword.email(), encodedPassword);
+            return "A senha foi alterada com sucesso!";
 
-        ForgotPassword fp = forgotPasswordRepository.findByOtpAndUser(otp, user).orElseThrow(() -> new RuntimeException("OTP inválido do email: " + email));
-
-        if (fp.getExpirationTime().before(Date.from(Instant.now()))) {
-            forgotPasswordRepository.deleteById(fp.getFpid());
-            throw new RuntimeException("OTP Expirou!");
+        }else {
+            throw new RuntimeException("As senhas não coincidem");
         }
 
-        return "OTP verificado!";
-    }
-
-    public String changePasswordHandler(ChangePassword changePassword, String email) {
-        if(!Objects.equals(changePassword.password(), changePassword.repeatPassword())) {
-            throw new RuntimeException("Por favor coloque a senha novamente!");
-        }
-        String encodedPassword = passwordEncoder.encode(changePassword.password());
-        userRepository.updatePassoword(email, encodedPassword);
-
-        return "A senha foi alterada com sucesso!";
     }
 }
 
