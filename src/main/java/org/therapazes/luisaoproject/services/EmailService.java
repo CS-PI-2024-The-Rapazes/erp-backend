@@ -1,4 +1,4 @@
-package org.therapazes.luisaoproject.service;
+package org.therapazes.luisaoproject.services;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -8,7 +8,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.therapazes.luisaoproject.dto.MailBody;
+import org.therapazes.luisaoproject.dto.MailBodyDto;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
@@ -30,26 +30,26 @@ public class EmailService {
         context.setVariables(variables);
         String body = springTemplateEngine.process("index", context);
 
-        MailBody mailBody = MailBody.builder()
+        MailBodyDto mailBodyDto = MailBodyDto.builder()
                 .to(to)
                 .subject(subject)
                 .text(body)
                 .isHtml(true)
                 .build();
 
-        sendEmail(mailBody);
+        sendEmail(mailBodyDto);
     }
 
     @Async
-    public void sendEmail(MailBody mailBody) throws MessagingException {
-        if (mailBody.isHtml()) {
+    public void sendEmail(MailBodyDto mailBodyDto) throws MessagingException {
+        if (mailBodyDto.isHtml()) {
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true); // true for multipart
 
             try {
-                helper.setTo(mailBody.to());
-                helper.setSubject(mailBody.subject());
-                helper.setText(mailBody.text(), true); // true for HTML
+                helper.setTo(mailBodyDto.to());
+                helper.setSubject(mailBodyDto.subject());
+                helper.setText(mailBodyDto.text(), true); // true for HTML
 
                 ClassPathResource imageResource = new ClassPathResource("static/images/logoCoxinha.png");
 
@@ -64,9 +64,9 @@ public class EmailService {
         } else {
             SimpleMailMessage message = new SimpleMailMessage();
 
-            message.setTo(mailBody.to());
-            message.setSubject(mailBody.subject());
-            message.setText(mailBody.text());
+            message.setTo(mailBodyDto.to());
+            message.setSubject(mailBodyDto.subject());
+            message.setText(mailBodyDto.text());
 
             javaMailSender.send(message);
         }

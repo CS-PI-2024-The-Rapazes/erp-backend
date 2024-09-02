@@ -6,15 +6,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
-
-import org.therapazes.luisaoproject.service.ForgotPasswordService;
 import org.therapazes.luisaoproject.dto.ChangePassword;
+import org.therapazes.luisaoproject.services.ForgotPasswordService;
 
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/forgotPassword")
-
+@RequestMapping("v1/forgotPassword")
 public class ForgotPasswordController {
 
     private final ForgotPasswordService forgotPasswordService;
