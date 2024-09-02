@@ -1,17 +1,14 @@
 package org.therapazes.luisaoproject.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
+@Data
 @Builder
 public class ForgotPassword {
 
@@ -20,7 +17,7 @@ public class ForgotPassword {
     private Integer fpid;
 
     @Column(nullable = false)
-    private Integer otp;
+    private String code;
 
     @Column(nullable = false)
     private Date expirationTime;
