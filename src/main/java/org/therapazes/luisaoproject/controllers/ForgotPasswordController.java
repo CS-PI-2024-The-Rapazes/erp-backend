@@ -17,7 +17,6 @@ public class ForgotPasswordController {
 
     private final ForgotPasswordService forgotPasswordService;
 
-    //enviar mensagem para o email de verificacao
     @PostMapping("/verifyMail/{email}")
     public ResponseEntity<String> verifyEmail(@PathVariable String email) {
 
