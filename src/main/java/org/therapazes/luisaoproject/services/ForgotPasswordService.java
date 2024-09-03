@@ -2,6 +2,7 @@ package org.therapazes.luisaoproject.services;
 
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,11 +26,13 @@ public class ForgotPasswordService {
     private final ForgotPasswordRepository forgotPasswordRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Value("${app.base-email-url}")
+    private String baseEmailUrl;
 
     public String verifyEmail(String email) throws MessagingException {
         String randomID = UUID.randomUUID().toString();
-
-        String recoveryURL = "http://localhost:8080/user/account-recovery?email=" + email + "&sec=" + randomID;
+        //TODO - AJUSTAR DEPOIS
+        String recoveryURL = baseEmailUrl.concat("?email=").concat(email).concat("&sec=").concat(randomID);
 
         Map<String, Object> variables = new HashMap<>();
         variables.put("otp", recoveryURL);

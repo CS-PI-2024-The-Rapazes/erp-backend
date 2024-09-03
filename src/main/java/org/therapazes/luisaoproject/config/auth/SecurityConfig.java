@@ -3,6 +3,8 @@ package org.therapazes.luisaoproject.config.auth;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -23,9 +25,15 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
+    private final Environment environment;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        if (environment.acceptsProfiles(Profiles.of("dev"))) {
+            return http.csrf(AbstractHttpConfigurer::disable)
+                    .authorizeHttpRequests(e -> e.anyRequest().permitAll())
+                    .build();
+        }
         return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(e -> e.requestMatchers("v1/auth/**", "v1/forgotPassword/**")
                         .permitAll()
