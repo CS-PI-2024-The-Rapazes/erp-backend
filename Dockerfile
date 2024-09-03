@@ -1,5 +1,5 @@
 ﻿FROM eclipse-temurin:17-jdk-alpine
-WORKDIR: /app
+WORKDIR /app
 COPY target/luisaoproject.0.0.1.jar luisaoproject.0.0.1.jar
 EXPOSE 8080
 
