@@ -3,4 +3,4 @@ WORKDIR: /app
 COPY target/luisaoproject.0.0.1-SNAPSHOT.jar luisaoproject.0.0.1-SNAPSHOT.jar
 EXPOSE 8080
 
-CMD["java", "=jar", "luisaoproject.0.0.1-SNAPSHOT.jar"]
+CMD["java", "=jar", "luisaoproject.0.0.1.jar"]
