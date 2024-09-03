@@ -32,7 +32,7 @@ jobs:
       - name: Setup environment
         run: |
           echo DATABASE_USERNAME=${{secrets.DATABASE_USERNAME}} >> .env
-          echo DATABASE_PASSWORD=${{secrets.DATABASE_PASSWORD}} >> .env
+          echo DATABASE_PASSWORD='${{secrets.DATABASE_PASSWORD}}' >> .env
           echo DATABASE_URL=${{secrets.DATABASE_URL}} >> .env
           echo DOCKER_USERNAME=${{secrets.DOCKER_USERNAME}} >> .env
           echo JWT_KEY=${{secrets.JWT_KEY}} >> .env
