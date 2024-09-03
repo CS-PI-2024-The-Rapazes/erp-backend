@@ -29,6 +29,10 @@ jobs:
       - name: Push image docker
         run: docker push ${{secrets.DOCKER_USERNAME}}/luisaoproject.0.0.1
 
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
       - name: Setup environment
         run: |
           echo DATABASE_USERNAME=${{secrets.DATABASE_USERNAME}} >> .env
@@ -38,12 +42,7 @@ jobs:
           echo JWT_KEY=${{secrets.JWT_KEY}} >> .env
           echo MAIL_PASSWORD=${{secrets.MAIL_PASSWORD}} >> .env
           echo MAIL_USERNAME=${{secrets.MAIL_USERNAME}} >> .env
-  
 
-  deploy:
-    needs: build
-    runs-on: self-hosted
-    steps:
       - name: Pull image from Docker Hub
         run: docker pull ${{secrets.DOCKER_USERNAME}}/luisaoproject.0.0.1:latest
 
