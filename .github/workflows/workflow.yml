@@ -24,10 +24,10 @@ jobs:
         run: echo "${{secrets.DOCKER_TOKEN}}" | docker login -u ${{secrets.DOCKER_USERNAME}} --password-stdin
 
       - name: Build Docker image
-        run: docker build -t ${{secrets.DOCKER_USERNAME}}/luisaoproject.0.0.1 .
+        run: docker build -t ${{secrets.DOCKER_USERNAME}}/luisaoproject-0.0.1 .
 
       - name: Push image docker
-        run: docker push ${{secrets.DOCKER_USERNAME}}/luisaoproject.0.0.1
+        run: docker push ${{secrets.DOCKER_USERNAME}}/luisaoproject-0.0.1
 
   deploy:
     needs: build
@@ -44,13 +44,13 @@ jobs:
           echo MAIL_USERNAME=${{secrets.MAIL_USERNAME}} >> .env
 
       - name: Pull image from Docker Hub
-        run: docker pull ${{secrets.DOCKER_USERNAME}}/luisaoproject.0.0.1:latest
+        run: docker pull ${{secrets.DOCKER_USERNAME}}/luisaoproject-0.0.1:latest
 
       - name: Stop and remove existing container
         run: docker rm -f luisaoproject || true
 
       - name: Run Docker container
-        run: docker run -d -p 8080:8080 --env-file .env --name luisaoproject ${{secrets.DOCKER_USERNAME}}/luisaoproject.0.0.1
+        run: docker run -d -p 8080:8080 --env-file .env --name luisaoproject ${{secrets.DOCKER_USERNAME}}/luisaoproject-0.0.1
 
       - name: Clean up
         run: rm .env
