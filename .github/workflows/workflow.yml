@@ -42,6 +42,7 @@ jobs:
           echo JWT_KEY=${{secrets.JWT_KEY}} >> .env
           echo MAIL_PASSWORD=${{secrets.MAIL_PASSWORD}} >> .env
           echo MAIL_USERNAME=${{secrets.MAIL_USERNAME}} >> .env
+          echo APP_BASE_EMAIL_URL=${{secrets.APP_BASE_EMAIL_URL}} >> .env
 
       - name: Pull image from Docker Hub
         run: docker pull ${{secrets.DOCKER_USERNAME}}/luisaoproject-0.0.1:latest
