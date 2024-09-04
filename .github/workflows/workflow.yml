@@ -2,7 +2,7 @@
 
 on:
   push:
-    branches: [feat/teste-deploy]
+    branches: [develop]
 
 jobs:
   build:
