@@ -32,11 +32,8 @@ public class ForgotPasswordService {
 
     public String verifyEmail(String email) throws MessagingException {
         String randomID = UUID.randomUUID().toString();
-        
-        String recoveryURL = UriComponentsBuilder.fromHttpUrl(baseEmailUrl)
-                .queryParam("email", email)
-                .queryParam("sec", randomID)
-                .toUriString();
+
+        String recoveryURL = baseEmailUrl + "?code=" + randomID + "&email=" + email;
 
         Map<String, Object> variables = new HashMap<>();
         variables.put("otp", recoveryURL);
