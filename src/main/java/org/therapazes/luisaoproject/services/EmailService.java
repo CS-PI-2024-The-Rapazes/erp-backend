@@ -2,6 +2,7 @@ package org.therapazes.luisaoproject.services;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -15,14 +16,10 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class EmailService {
     private final JavaMailSender javaMailSender;
     private final SpringTemplateEngine springTemplateEngine;
-
-    public EmailService(JavaMailSender javaMailSender, SpringTemplateEngine springTemplateEngine) {
-        this.javaMailSender = javaMailSender;
-        this.springTemplateEngine = springTemplateEngine;
-    }
 
     @Async
     public void sendEmailWithTemplate(String to, String subject, Map<String, Object> variables) throws MessagingException {
@@ -53,7 +50,7 @@ public class EmailService {
 
                 ClassPathResource imageResource = new ClassPathResource("static/images/logoCoxinha.png");
 
-                helper.addInline("logo", imageResource, "image/png");
+                helper.addInline("logoCoxinha", imageResource);
 
                 javaMailSender.send(message);
 
