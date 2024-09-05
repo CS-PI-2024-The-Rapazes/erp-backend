@@ -51,7 +51,7 @@ public class ForgotPasswordService {
 
             ForgotPassword fp = ForgotPassword.builder()
                     .code(randomID)
-                    .expirationTime(new Date(System.currentTimeMillis() + 300 * 1000)) // 3 MINUTOS
+                    .expirationTime(new Date(System.currentTimeMillis() + 300 * 1000)) // 5 MINUTOS
                     .user(user)
                     .build();
             forgotPasswordRepository.save(fp);
@@ -69,14 +69,12 @@ public class ForgotPasswordService {
     public String changePasswordHandler(ChangePassword changePassword) {
         ForgotPassword fp = forgotPasswordRepository.findByUserEmail(changePassword.email()).orElseThrow(() -> new UsernameNotFoundException("Coloque um email válido!"));
 
-        if (fp.getCode().equals(changePassword.code())) {
-            String encodedPassword = passwordEncoder.encode(changePassword.password());
-            userRepository.updatePassoword(changePassword.email(), encodedPassword);
-            return "A senha foi alterada com sucesso!";
+        if(fp.getExpirationTime().before(new Date())) throw new RuntimeException("Tentativa de mudar senha expirada");
+        if (!(fp.getCode().equals(changePassword.code()))) throw new RuntimeException("As senhas não coincidem");
 
-        } else {
-            throw new RuntimeException("As senhas não coincidem");
-        }
+        String encodedPassword = passwordEncoder.encode(changePassword.password());
+        userRepository.updatePassoword(changePassword.email(), encodedPassword);
+        return "A senha foi alterada com sucesso!";
     }
 }
 

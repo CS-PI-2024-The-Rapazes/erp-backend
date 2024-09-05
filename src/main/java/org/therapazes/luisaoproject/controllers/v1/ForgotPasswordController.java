@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.therapazes.luisaoproject.dto.ChangePassword;
+import org.therapazes.luisaoproject.dto.VerifyEmailDto;
 import org.therapazes.luisaoproject.services.ForgotPasswordService;
 
 
@@ -25,17 +26,15 @@ public class ForgotPasswordController {
             @ApiResponse(responseCode = "400", description = "Erro ao enviar email"),
             @ApiResponse(responseCode = "404", description = "Email não encontrado")
     })
-    @PostMapping("/verify-mail/{email}")
-    public ResponseEntity<String> verifyEmail(@PathVariable String email) {
-
+    @PostMapping("/verify-mail")
+    public ResponseEntity<String> verifyEmail(@RequestBody VerifyEmailDto email) {
         try {
-            return ResponseEntity.ok(forgotPasswordService.verifyEmail(email));
+            return ResponseEntity.ok(forgotPasswordService.verifyEmail(email.getEmail()));
         } catch (UsernameNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
     }
 
     @Operation(summary = "Muda a senha do usuário")
