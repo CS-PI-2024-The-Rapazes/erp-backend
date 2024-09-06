@@ -5,79 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recuperação de Senha</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-
-        .email-container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border: 1px solid #dddddd;
-        }
-
-        .header {
-            background-color: #f4f4f4;
-            text-align: center;
-        }
-
-        .header img {
-            max-width: 150px;
-        }
-
-        .content {
-            padding: 20px;
-            text-align: center;
-        }
-
-        .content p {
-            font-size: 16px;
-            color: #333333;
-            line-height: 1.5;
-        }
-
-        .otp-code {
-            font-size: 24px;
-            font-weight: bold;
-            color: #ff479d;
-            margin: 20px 0;
-        }
-
-        .footer {
-            background-color: #f4f4f4;
-            padding: 10px;
-            text-align: center;
-            font-size: 12px;
-            color: #777777;
-        }
-
-        .logo {
-            width: 15%;
-        }
-        .otp-code {
-            font-size: 13px;
-        }
-
-    </style>
 </head>
 
+<body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
 
-<body>
-    <div class="email-container">
-        <div class="header">
-            <th:block th:utext="${imageHtml}"></th:block>
+<div class="email-container" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #dddddd;">
+    <div class="header" style="background-color: #f4f4f4; text-align: center;">
+        <img src="cid:logo" style="max-width: 90px; width: 100%; height: auto; display: block; margin: 0 auto;" alt="Logo">
+    </div>
+    <div class="content" style="padding: 20px; text-align: center;">
+        <p style="font-size: 20px; color: #333333; line-height: 1.8;">Olá,</p>
+        <p style="font-size: 20px; color: #333333; line-height: 1.8;">Você solicitou a recuperação da sua senha. Clique no abaixo para ser redirecionado para a troca de senha:</p>
+        <div class="otp-code" style="font-size: 20px; font-weight: bold; margin: 20px 0;">
+            <a class = "url" style="text-decoration: none;" th:href="${otp}">Clique aqui para mudar a senha</a>
         </div>
-        <div class="content">
-            <p>Olá,</p>
-            <p>Você solicitou a recuperação da sua senha. Clique no link abaixo para ser redirecionado para a troca de senha!:</p>
-            <div class="otp-code" th:text="${otp}"></div>
-            <p>Se você não solicitou esta ação, por favor ignore este e-mail.</p>
+        <p style="font-size: 20px; color: #333333; line-height: 1.8;">Se você não solicitou esta ação, por favor ignore este e-mail.</p>
         </div>
-        <div class="footer">
+    <div class="footer" style="background-color: #f4f4f4; padding: 10px; text-align: center; font-size: 14px; color: #777777;">
             <p>&copy; 2024 The Rapazes. Todos os direitos reservados.</p>
         </div>
     </div>
