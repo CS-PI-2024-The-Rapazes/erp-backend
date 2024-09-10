@@ -10,6 +10,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.therapazes.luisaoproject.dto.ChangePassword;
 import org.therapazes.luisaoproject.entities.ForgotPassword;
 import org.therapazes.luisaoproject.entities.User;
+import org.therapazes.luisaoproject.interfaces.ForgotPasswordProjection;
 import org.therapazes.luisaoproject.repositories.ForgotPasswordRepository;
 import org.therapazes.luisaoproject.repositories.UserRepository;
 
@@ -38,7 +39,6 @@ public class ForgotPasswordService {
         Map<String, Object> variables = new HashMap<>();
         variables.put("otp", recoveryURL);
 
-
         forgotPasswordRepository.findByUserEmail(email).ifPresentOrElse(e -> {
             e.setCode(randomID);
             e.setExpirationTime(new Date(System.currentTimeMillis() + 300 * 1000));
@@ -64,13 +64,13 @@ public class ForgotPasswordService {
     }
 
     public String changePasswordHandler(ChangePassword changePassword) {
-        ForgotPassword fp = forgotPasswordRepository.findByUserEmail(changePassword.email()).orElseThrow(() -> new UsernameNotFoundException("Coloque um email válido!"));
+        ForgotPasswordProjection fp = forgotPasswordRepository.findByUserEmailProjection(changePassword.email()).orElseThrow(() -> new UsernameNotFoundException("Coloque um email válido!"));
 
         if(fp.getExpirationTime().before(new Date())) throw new RuntimeException("Tentativa de mudar senha expirada");
-        if (!(fp.getCode().equals(changePassword.code()))) throw new RuntimeException("As senhas não coincidem");
+        if (!(fp.getCode().equals(changePassword.code()))) throw new RuntimeException("Código de verificação inválido");
 
         String encodedPassword = passwordEncoder.encode(changePassword.password());
-        userRepository.updatePassoword(changePassword.email(), encodedPassword);
+        userRepository.updatePassword(changePassword.email(), encodedPassword);
         return "A senha foi alterada com sucesso!";
     }
 }
