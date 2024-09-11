@@ -51,4 +51,4 @@ jobs:
         run: docker rm -f luisaoproject || true
 
       - name: Run Docker container
-        run: docker run -d -p 80:8080 --env-file .env --name luisaoproject ${{secrets.DOCKER_USERNAME}}/luisaoproject-0.0.1:latest
+        run: docker run -d -p 8080:8080 --env-file .env --name luisaoproject ${{secrets.DOCKER_USERNAME}}/luisaoproject-0.0.1:latest
