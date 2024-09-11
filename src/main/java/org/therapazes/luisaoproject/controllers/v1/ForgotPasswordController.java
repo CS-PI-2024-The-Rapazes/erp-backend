@@ -16,6 +16,7 @@ import org.therapazes.luisaoproject.services.ForgotPasswordService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("v1/forgot-password")
+@CrossOrigin
 public class ForgotPasswordController {
 
     private final ForgotPasswordService forgotPasswordService;
