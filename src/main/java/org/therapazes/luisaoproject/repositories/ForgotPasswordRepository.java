@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.therapazes.luisaoproject.entities.ForgotPassword;
 import org.therapazes.luisaoproject.entities.User;
+import org.therapazes.luisaoproject.interfaces.ForgotPasswordProjection;
 
 import java.util.Optional;
 
@@ -15,4 +16,7 @@ public interface ForgotPasswordRepository extends JpaRepository<ForgotPassword, 
     Optional<ForgotPassword> findByOtpAndUser(String code, User user);
 
     Optional<ForgotPassword> findByUserEmail(String email);
+
+    @Query("SELECT fp.code AS code, fp.expirationTime AS expirationTime FROM ForgotPassword fp WHERE fp.user.email = ?1")
+    Optional<ForgotPasswordProjection> findByUserEmailProjection(String email);
 }
