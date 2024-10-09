@@ -36,7 +36,6 @@ public class ProdutoController {
     }
     @PatchMapping("/status")
     public ResponseEntity<?> update(@RequestParam("id") Integer id) {
-        produtoService.updateStatus(id);
         try {
             return ResponseEntity.ok(produtoService.updateStatus(id));
         } catch (NoSuchElementException e) {

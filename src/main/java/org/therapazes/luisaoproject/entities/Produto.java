@@ -1,8 +1,6 @@
 package org.therapazes.luisaoproject.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
@@ -11,6 +9,8 @@ import java.util.Date;
 @Data
 @Table(name = "produto")
 public class Produto {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idProduto")
     private Integer idProduto;
 
