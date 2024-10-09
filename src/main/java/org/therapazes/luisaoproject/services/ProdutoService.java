@@ -7,11 +7,12 @@ import org.therapazes.luisaoproject.entities.Produto;
 import org.therapazes.luisaoproject.repositories.ProdutoRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ProdutoService {
-    private ProdutoRepository produtoRepository;
+    private final ProdutoRepository produtoRepository;
 
     public Produto getProdutoById(Integer id) {
         return produtoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Produto com id " + id + " não encontrado"));
@@ -27,5 +28,23 @@ public class ProdutoService {
 
     public void deleteById(Integer id) {
         produtoRepository.deleteById(id);
+    }
+
+    public Produto updateProduto(Produto produto) {
+        Optional<Produto> existingProduto = produtoRepository.findById(produto.getIdProduto());
+        if (existingProduto.isPresent()) {
+            return produtoRepository.save(produto);
+        }
+        return null;
+    }
+
+    public Produto updateStatus(Integer id, Boolean status) {
+        Optional<Produto> produtoOptional = produtoRepository.findById(id);
+        if (produtoOptional.isPresent()) {
+            Produto produto = produtoOptional.get();
+            produto.setStatus(status);
+            return produtoRepository.save(produto);
+        }
+        return null;
     }
 }
