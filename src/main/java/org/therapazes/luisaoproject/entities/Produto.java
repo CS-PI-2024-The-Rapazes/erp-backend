@@ -20,6 +20,7 @@ public class Produto {
     private String descricao;
     @Column(name = "detalhes")
     private String detalhes;
+    @Column(name = "categoria")
     private Integer categoria;
     @Column(name = "dataCadastro")
     private Date dataCadastro;
