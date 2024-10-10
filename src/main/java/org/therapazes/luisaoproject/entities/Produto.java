@@ -33,5 +33,5 @@ public class Produto {
     private Date dataCadastro;
 
     @Column(name = "isAtivo")
-    private Boolean isAtivo;
+    private Boolean status;
 }
