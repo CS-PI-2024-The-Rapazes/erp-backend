@@ -3,10 +3,13 @@ package org.therapazes.luisaoproject.controllers.v1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.therapazes.luisaoproject.entities.Produto;
 import org.therapazes.luisaoproject.services.ProdutoService;
+
+import java.util.NoSuchElementException;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,6 +27,17 @@ public class ProdutoController {
     public ResponseEntity<Page<Produto>> getAllProduto(@RequestParam(defaultValue = "0") int page,
                                                        @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(produtoService.getAllProduto(PageRequest.of(page, size)));
+    }
+
+    @PatchMapping("/status")
+    public ResponseEntity<?> update(@RequestParam("id") Integer id) {
+        try {
+            return ResponseEntity.ok(produtoService.updateStatus(id));
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping

@@ -23,6 +23,12 @@ public class ProdutoService {
         return produtoRepository.findAll(pageable);
     }
 
+    public Produto updateStatus(Integer id) {
+        var produto = produtoRepository.findById(id).orElseThrow(() -> new RuntimeException("Produto com ID não encontrado"));
+        produto.setStatus(!produto.getStatus());
+        return produtoRepository.save(produto);
+    }
+
     public Produto save(Produto produto) {
         produto.setDataCadastro(new Date());
         produto.setStatus(true);
