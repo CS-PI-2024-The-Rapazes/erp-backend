@@ -1,15 +1,15 @@
 package org.therapazes.luisaoproject.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.Date;
 
 @Entity
 @Table(name = "produto")
 public class Produto {
-    @Column(name = "idProduto")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_produto")
     private Integer idProduto;
     @Column(name = "nome")
     private String nome;
@@ -21,8 +21,8 @@ public class Produto {
     private String detalhes;
     @Column(name = "categoria")
     private String categoria;
-    @Column(name = "dataCadastro")
+    @Column(name = "data_cadastro")
     private Date dataCadastro;
-    @Column(name = "isAtivo")
-    private boolean isAtivo;
+    @Column(name = "status")
+    private Boolean status;
 }
