@@ -1,14 +1,21 @@
 package org.therapazes.luisaoproject.controllers.v1;
 
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.therapazes.luisaoproject.entities.Produto;
+import org.therapazes.luisaoproject.services.ProdutoService;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("v1/produto")
+@CrossOrigin
 public class ProdutoController {
+    private final ProdutoService produtoService;
 
     @GetMapping("/{id}")
     public ResponseEntity<Produto> getProduto(@PathVariable("id") Integer id) {
@@ -31,8 +38,15 @@ public class ProdutoController {
         return ResponseEntity.ok(new Produto());
     }
     @DeleteMapping
-    public ResponseEntity<Produto> delete(@RequestParam("id") Integer id) {
-        return ResponseEntity.ok(new Produto());
+    public ResponseEntity<?> delete(@RequestParam("id") Integer id) {
+        try {
+            produtoService.remove(id);
+        }catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok("Produto deletado");
     }
 
 }
