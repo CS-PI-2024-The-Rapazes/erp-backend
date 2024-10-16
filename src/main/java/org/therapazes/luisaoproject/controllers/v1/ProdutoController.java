@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.therapazes.luisaoproject.entities.Produto;
@@ -29,6 +30,16 @@ public class ProdutoController {
         return ResponseEntity.ok(produtoService.getAllProduto(PageRequest.of(page, size)));
     }
 
+    @PostMapping
+    public ResponseEntity<Produto> save(@RequestBody Produto produto) {
+        return ResponseEntity.ok(produtoService.save(produto));
+    }
+
+    @PutMapping("/edit")
+    public ResponseEntity<Produto> update(@RequestBody Produto produto) {
+        return ResponseEntity.ok(new Produto());
+    }
+
     @PatchMapping("/status")
     public ResponseEntity<?> update(@RequestParam("id") Integer id) {
         try {
@@ -40,9 +51,10 @@ public class ProdutoController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<Produto> save(@RequestBody Produto produto) {
-        return ResponseEntity.ok(produtoService.save(produto));
+    @DeleteMapping
+    public ResponseEntity<Produto> delete(@RequestParam("id") Integer id) {
+        return ResponseEntity.ok(new Produto());
     }
+
 }
 

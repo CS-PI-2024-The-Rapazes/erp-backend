@@ -32,6 +32,7 @@ public class Produto {
 
     @Column(name = "status")
     private Boolean status;
+
     @Lob
     @Column(name = "imagem")
     private byte[] imagem;
