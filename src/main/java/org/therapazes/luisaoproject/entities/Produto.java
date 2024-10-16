@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
-
 @Entity
 @Data
 public class Produto {
@@ -25,9 +24,10 @@ public class Produto {
     @Column(name = "detalhes")
     private String detalhes;
 
+    @Column(name = "categoria")
     private Integer categoria;
 
-    @Column(name = "dataCadastro")
+    @Column(name = "data_cadastro")
     private Date dataCadastro;
 
     @Column(name = "status")

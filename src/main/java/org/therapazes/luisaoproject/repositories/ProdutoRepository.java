@@ -6,4 +6,5 @@ import org.therapazes.luisaoproject.entities.Produto;
 
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
+
 }
