@@ -33,6 +33,9 @@ public class Produto {
     @Column(name = "status")
     private Boolean status;
 
+    @Column(name = "preco")
+    private Double preco;
+
     @Lob
     @Column(name = "imagem")
     private byte[] imagem;
