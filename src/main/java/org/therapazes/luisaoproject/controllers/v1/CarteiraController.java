@@ -32,4 +32,10 @@ public class CarteiraController {
     public ResponseEntity<Carteira> save(@RequestBody Carteira carteira) {
         return ResponseEntity.ok(carteiraService.save(carteira));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
+        carteiraService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 }
