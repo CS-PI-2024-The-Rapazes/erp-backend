@@ -1,4 +1,4 @@
-﻿package org.therapazes.luisaoproject.enums;
+package org.therapazes.luisaoproject.enums;
 
 public enum EComandaStatus {
     DISPONIVEL,

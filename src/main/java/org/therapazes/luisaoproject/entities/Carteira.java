@@ -11,7 +11,6 @@ public class Carteira {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_carteira")
     private Integer idCarteira;
-    @Enumerated(EnumType.STRING)
     @Column(name = "tipo")
     private String tipo;
     @Column(name = "descricao")

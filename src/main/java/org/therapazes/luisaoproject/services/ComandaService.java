@@ -1,4 +1,4 @@
-﻿package org.therapazes.luisaoproject.services;
+package org.therapazes.luisaoproject.services;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

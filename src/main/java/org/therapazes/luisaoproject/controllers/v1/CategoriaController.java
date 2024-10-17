@@ -1,4 +1,4 @@
-﻿package org.therapazes.luisaoproject.controllers.v1;
+package org.therapazes.luisaoproject.controllers.v1;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
