@@ -3,6 +3,7 @@ package org.therapazes.luisaoproject.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.therapazes.luisaoproject.enums.ECarteiraStatus;
 
 @Data
 @Entity
@@ -12,7 +13,8 @@ public class Carteira {
     @Column(name = "id_carteira")
     private Integer idCarteira;
     @Column(name = "tipo")
-    private String tipo;
+    @Enumerated(EnumType.STRING)
+    private ECarteiraStatus tipo;
     @Column(name = "descricao")
     private String descricao;
     @Column(name = "numero_conta")
