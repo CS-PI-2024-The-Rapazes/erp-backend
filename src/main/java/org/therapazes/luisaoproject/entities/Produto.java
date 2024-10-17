@@ -37,6 +37,6 @@ public class Produto {
     private Double preco;
 
     @Lob
-    @Column(name = "imagem")
+    @Column(name = "imagem", columnDefinition = "LONGBLOB")
     private byte[] imagem;
 }
