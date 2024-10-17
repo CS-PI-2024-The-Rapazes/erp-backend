@@ -1,6 +1,7 @@
 package org.therapazes.luisaoproject.controllers.v1;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,12 @@ public class ProdutoController {
     @PostMapping
     public ResponseEntity<Produto> save(@RequestBody Produto produto) {
         return ResponseEntity.ok(produtoService.save(produto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
+        produtoService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
 

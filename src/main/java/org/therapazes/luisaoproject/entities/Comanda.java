@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.therapazes.luisaoproject.enums.EComandaStatus;
 
 @Entity
 @NoArgsConstructor
@@ -21,6 +22,7 @@ public class Comanda {
     @Column(name = "nome")
     private String name;
     @Column(name = "status")
-    private Boolean status;
+    @Enumerated(EnumType.STRING)
+    private EComandaStatus status;
 
 }

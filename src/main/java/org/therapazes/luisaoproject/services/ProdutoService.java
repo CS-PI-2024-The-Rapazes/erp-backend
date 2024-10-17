@@ -28,4 +28,13 @@ public class ProdutoService {
         produto.setStatus(true);
         return produtoRepository.save(produto);
     }
+
+    public void delete(Integer id) {
+        Produto produtoSaved = produtoRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Produto com id " + id + " não encontrado"));
+        if(produtoSaved.getStatus().equals(false)){
+            produtoRepository.delete(produtoSaved);
+        }else {
+            throw new IllegalArgumentException("Produto com status diferente de false não pode ser deletado");
+        }
+    }
 }

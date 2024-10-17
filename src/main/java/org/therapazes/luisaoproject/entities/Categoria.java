@@ -20,7 +20,9 @@ public class Categoria {
     private Integer idCategoria;
     @Column(name = "descricao")
     private String description;
+    @Column(name = "ordem")
     private Integer ordem;
+    @Column(name = "produto")
     private Integer produto;
     @Column(name = "data_atualizacao")
     private Date dataAtualizacao;
