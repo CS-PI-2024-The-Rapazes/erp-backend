@@ -1,5 +1,6 @@
 package org.therapazes.luisaoproject.controllers.v1;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,7 +38,8 @@ public class ProdutoController {
 
     @PutMapping("/edit")
     public ResponseEntity<Produto> update(@RequestBody Produto produto) {
-        return ResponseEntity.ok(new Produto());
+        Produto updatedProduto = produtoService.updateProduto(produto);
+        return updatedProduto != null ? ResponseEntity.ok(updatedProduto) : ResponseEntity.notFound().build();
     }
 
     @PatchMapping("/status")
@@ -51,9 +53,14 @@ public class ProdutoController {
         }
     }
 
-    @DeleteMapping
-    public ResponseEntity<Produto> delete(@RequestParam("id") Integer id) {
-        return ResponseEntity.ok(new Produto());
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        try {
+            produtoService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }
