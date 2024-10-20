@@ -32,6 +32,9 @@ public class ProdutoService {
     }
 
     public void deleteById(Integer id) {
+        if (!produtoRepository.existsById(id)) {
+            throw new EntityNotFoundException("Produto não encontrado");
+        }
         produtoRepository.deleteById(id);
     }
 
