@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.therapazes.luisaoproject.entities.Produto;
 import org.therapazes.luisaoproject.services.ProdutoService;
@@ -15,6 +16,7 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequiredArgsConstructor
+@PreAuthorize("isAuthenticated()")
 @RequestMapping("v1/produto")
 public class ProdutoController {
 
