@@ -19,7 +19,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @Configuration
-@EnableWebSecurity()
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -29,28 +29,37 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         if (environment.acceptsProfiles(Profiles.of("dev"))) {
-            return http.csrf(AbstractHttpConfigurer::disable)
-                    .authorizeHttpRequests(e -> e.anyRequest().permitAll())
-                    .build();
+            http.csrf(AbstractHttpConfigurer::disable)
+                    .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+        } else {
+            http.csrf(AbstractHttpConfigurer::disable)
+                    .authorizeHttpRequests(auth -> auth
+                            .requestMatchers("v1/auth/**", "v1/forgot-password/**").permitAll()
+                            .anyRequest().authenticated())
+                    .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                    .authenticationProvider(authenticationProvider)
+                    .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         }
-        return http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(e -> e.requestMatchers("v1/auth/**", "v1/forgot-password/**")
-                        .permitAll()
-                        .anyRequest()
-                        .authenticated())
-                .sessionManagement(e -> e.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+
+        return http.build();
     }
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
+    public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*"));
-        configuration.setAllowedMethods(List.of("*"));
+
+        if (environment.acceptsProfiles(Profiles.of("prod"))) {
+            configuration.setAllowedOrigins(List.of("https://erp-frontend-deploy.vercel.app"));
+            configuration.setAllowCredentials(true);
+        } else {
+            configuration.setAllowedOrigins(List.of("*"));
+        }
+
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
