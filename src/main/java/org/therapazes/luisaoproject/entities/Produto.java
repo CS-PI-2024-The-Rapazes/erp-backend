@@ -20,8 +20,9 @@ public class Produto {
     private String descricao;
     @Column(name = "detalhes")
     private String detalhes;
-    @Column(name = "categoria")
-    private Integer categoria;
+    @ManyToOne
+    @JoinColumn(name = "id_categoria")
+    private Categoria categoria;
     @Column(name = "data_cadastro")
     private Date dataCadastro;
     @Column(name = "status")

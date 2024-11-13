@@ -1,14 +1,14 @@
-INSERT IGNORE INTO produto (id_produto, nome, codigo_listagem, descricao, detalhes, categoria, data_cadastro, status, imagem) VALUES
-(1, 'Produto 1', 1001, 'Descrição 1', 'Detalhes 1', 1, NOW(), TRUE, NULL),
-(2, 'Produto 2', 1002, 'Descrição 2', 'Detalhes 2', 1, NOW(), TRUE, NULL),
-(3, 'Produto 3', 1003, 'Descrição 3', 'Detalhes 3', 2, NOW(), TRUE, NULL),
-(4, 'Produto 4', 1004, 'Descrição 4', 'Detalhes 4', 2, NOW(), TRUE, NULL),
-(5, 'Produto 5', 1005, 'Descrição 5', 'Detalhes 5', 3, NOW(), TRUE, NULL),
-(6, 'Produto 6', 1006, 'Descrição 6', 'Detalhes 6', 3, NOW(), TRUE, NULL),
-(7, 'Produto 7', 1007, 'Descrição 7', 'Detalhes 7', 4, NOW(), TRUE, NULL),
-(8, 'Produto 8', 1008, 'Descrição 8', 'Detalhes 8', 4, NOW(), TRUE, NULL),
-(9, 'Produto 9', 1009, 'Descrição 9', 'Detalhes 9', 5, NOW(), TRUE, NULL),
-(10, 'Produto 10', 1010, 'Descrição 10', 'Detalhes 10', 5, NOW(), TRUE, NULL);
+INSERT IGNORE INTO produto (id_produto, nome, codigo_listagem, descricao, detalhes, data_cadastro, status, imagem, id_categoria) VALUES
+(1, 'Produto 1', 1001, 'Descrição 1', 'Detalhes 1', NOW(), TRUE, NULL, 1),
+(2, 'Produto 2', 1002, 'Descrição 2', 'Detalhes 2', NOW(), TRUE, NULL, 1),
+(3, 'Produto 3', 1003, 'Descrição 3', 'Detalhes 3', NOW(), TRUE, NULL, 2),
+(4, 'Produto 4', 1004, 'Descrição 4', 'Detalhes 4', NOW(), TRUE, NULL, 3),
+(5, 'Produto 5', 1005, 'Descrição 5', 'Detalhes 5', NOW(), TRUE, NULL, 3),
+(6, 'Produto 6', 1006, 'Descrição 6', 'Detalhes 6', NOW(), TRUE, NULL, 4),
+(7, 'Produto 7', 1007, 'Descrição 7', 'Detalhes 7', NOW(), TRUE, NULL, 5),
+(8, 'Produto 8', 1008, 'Descrição 8', 'Detalhes 8', NOW(), TRUE, NULL, 2),
+(9, 'Produto 9', 1009, 'Descrição 9', 'Detalhes 9', NOW(), TRUE, NULL, 1),
+(10, 'Produto 10', 1010, 'Descrição 10', 'Detalhes 10', NOW(), TRUE, NULL, 2);
 
 INSERT IGNORE INTO categoria (id_categoria, descricao, ordem, produto, data_atualizacao) VALUES
 (1, 'Bebidas', 1, 1, NOW()),
