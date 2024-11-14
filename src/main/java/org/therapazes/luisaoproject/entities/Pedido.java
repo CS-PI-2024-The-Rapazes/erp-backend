@@ -12,13 +12,13 @@ public class Pedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_pedido")
     private Integer idPedido;
-
     @ManyToOne
     @JoinColumn(name = "id_produto")
     private Produto produto;
-
+    @Column(name = "descricao")
     private String descricao;
     @Column(name = "data_cadastro")
     private Date dataCadastro;
+    @Column(name = "status")
     private boolean status;
 }
