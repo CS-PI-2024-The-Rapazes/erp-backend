@@ -11,6 +11,7 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_item_pedido")
     private Integer idItemPedido;
+    @Column(name = "quantidade")
     private Integer quantidade;
     @Column(name = "valor_total")
     private double valorTotal;
