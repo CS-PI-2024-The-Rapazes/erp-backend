@@ -27,7 +27,9 @@ public class Produto {
     private Date dataCadastro;
     @Column(name = "status")
     private Boolean status;
+    @Column(name = "preco")
+    private Double preco;
     @Lob
-    @Column(name = "imagem")
+    @Column(name = "imagem", columnDefinition = "LONGBLOB")
     private byte[] imagem;
 }
