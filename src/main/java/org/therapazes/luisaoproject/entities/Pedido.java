@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -20,5 +21,7 @@ public class Pedido {
     @Column(name = "data_cadastro")
     private Date dataCadastro;
     @Column(name = "status")
-    private boolean status;
+    private Boolean status;
+    @OneToMany(mappedBy = "id_pedido", cascade = CascadeType.ALL)
+    private List<Item> itens;
 }
