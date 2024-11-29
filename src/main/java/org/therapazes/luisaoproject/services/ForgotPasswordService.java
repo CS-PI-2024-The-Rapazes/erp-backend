@@ -6,11 +6,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponentsBuilder;
 import org.therapazes.luisaoproject.dto.ChangePassword;
 import org.therapazes.luisaoproject.entities.ForgotPassword;
 import org.therapazes.luisaoproject.entities.User;
-import org.therapazes.luisaoproject.interfaces.ForgotPasswordProjection;
 import org.therapazes.luisaoproject.repositories.ForgotPasswordRepository;
 import org.therapazes.luisaoproject.repositories.UserRepository;
 
@@ -64,9 +62,9 @@ public class ForgotPasswordService {
     }
 
     public String changePasswordHandler(ChangePassword changePassword) {
-        ForgotPasswordProjection fp = forgotPasswordRepository.findByUserEmailProjection(changePassword.email()).orElseThrow(() -> new UsernameNotFoundException("Coloque um email válido!"));
+        ForgotPassword fp = forgotPasswordRepository.findByUserEmail(changePassword.email()).orElseThrow(() -> new UsernameNotFoundException("Coloque um email válido!"));
 
-        if(fp.getExpirationTime().before(new Date())) throw new RuntimeException("Tentativa de mudar senha expirada");
+        if (fp.getExpirationTime().before(new Date())) throw new RuntimeException("Tentativa de mudar senha expirada");
         if (!(fp.getCode().equals(changePassword.code()))) throw new RuntimeException("Código de verificação inválido");
 
         String encodedPassword = passwordEncoder.encode(changePassword.password());

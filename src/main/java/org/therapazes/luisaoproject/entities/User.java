@@ -22,8 +22,6 @@ public class User implements UserDetails {
     private String password;
     @Column(name = "active")
     private Boolean active;
-    @OneToOne(mappedBy = "user")
-    private ForgotPassword forgotPassword;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -3,7 +3,6 @@ package org.therapazes.luisaoproject.controllers.v1;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -60,6 +59,18 @@ public class ProdutoController {
         return ResponseEntity.ok(produtoService.save(produto));
     }
 
+    @Operation(summary = "Remove um produto")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Produto removido com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Erro ao remover produto"),
+            @ApiResponse(responseCode = "404", description = "Produto não encontrado")
+    })
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
+        produtoService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
     @Operation(summary = "Altera informações de um produto")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Produto editado com sucesso"),
@@ -88,22 +99,5 @@ public class ProdutoController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
-
-    @Operation(summary = "Remove um produto")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Produto removido com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Erro ao remover produto"),
-            @ApiResponse(responseCode = "404", description = "Produto não encontrado")
-    })
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
-        try {
-            produtoService.deleteById(id);
-            return ResponseEntity.noContent().build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
 }
 
