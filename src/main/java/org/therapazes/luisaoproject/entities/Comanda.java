@@ -38,10 +38,33 @@ public class Comanda {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dataAgendamento;
 
-    @OneToMany(mappedBy = "comanda")
-    private Set<Produto> produtos;
+    @OneToMany(mappedBy = "comanda", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ProdutosComanda> produtosComanda;
 
     public void adicionarProdutos(Set<Produto> produtos) {
-        // Implemente este método
+        for (Produto produto : produtos) {
+            ProdutosComanda existente = this.produtosComanda.stream()
+                    .filter(pc -> pc.getProduto().equals(produto))
+                    .findFirst()
+                    .orElse(null);
+
+            if (existente != null) {
+                existente.setQuantidade(existente.getQuantidade() + 1);
+                existente.calcularTotal();
+            } else {
+                ProdutosComanda pc = new ProdutosComanda();
+                pc.setComanda(this);
+                pc.setProduto(produto);
+                pc.setQuantidade(1);
+                pc.setPrecoUnitario(produto.getPreco());
+                pc.calcularTotal();
+
+                this.produtosComanda.add(pc);
+            }
+
+            this.valorTotal = this.produtosComanda.stream()
+                    .mapToDouble(ProdutosComanda::getTotal)
+                    .sum();
+        }
     }
 }

@@ -10,6 +10,7 @@ import org.therapazes.luisaoproject.entities.Produto;
 import org.therapazes.luisaoproject.repositories.ComandaRepository;
 
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -38,8 +39,9 @@ public class ComandaService {
         return comandaRepository.save(comandaSaved);
     }
 
-    public Comanda adicionarProdutos(Comanda comanda, Produto produto) {
-        //comanda.(produto);
+    public Comanda adicionarProdutos(int comandaId, Set<Produto> produtos) {
+        var comanda = getComandaById(comandaId);
+        comanda.adicionarProdutos(produtos);
         return comandaRepository.save(comanda);
     }
 }
