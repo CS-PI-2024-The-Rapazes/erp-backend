@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.therapazes.luisaoproject.entities.Comanda;
+import org.therapazes.luisaoproject.entities.Produto;
 import org.therapazes.luisaoproject.repositories.ComandaRepository;
 
 import java.util.NoSuchElementException;
@@ -35,5 +36,10 @@ public class ComandaService {
         comandaSaved.setName(comanda.getName());
         comandaSaved.setStatus(comanda.getStatus());
         return comandaRepository.save(comandaSaved);
+    }
+
+    public Comanda adicionarProdutos(Comanda comanda, Produto produto) {
+        //comanda.(produto);
+        return comandaRepository.save(comanda);
     }
 }
