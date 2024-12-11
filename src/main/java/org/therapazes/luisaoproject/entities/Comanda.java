@@ -49,6 +49,10 @@ public class Comanda {
                     .orElse(null);
 
             if (existente != null) {
+
+                if(existente.getQuantidade() + 1 == 1001)
+                    throw new RuntimeException("Quantidade máxima de produtos atingida");
+
                 existente.setQuantidade(existente.getQuantidade() + 1);
                 existente.calcularTotal();
             } else {
