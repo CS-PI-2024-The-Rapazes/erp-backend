@@ -6,14 +6,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.therapazes.luisaoproject.entities.Comanda;
+import org.therapazes.luisaoproject.entities.Produto;
 import org.therapazes.luisaoproject.repositories.ComandaRepository;
+import org.therapazes.luisaoproject.repositories.ProdutoRepository;
 
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class ComandaService {
     private final ComandaRepository comandaRepository;
+    private final ProdutoRepository produtoRepository;
 
     public Comanda getComandaById(Integer id) {
         return comandaRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Comanda com id " + id + " não encontrada"));
@@ -35,5 +39,12 @@ public class ComandaService {
         comandaSaved.setName(comanda.getName());
         comandaSaved.setStatus(comanda.getStatus());
         return comandaRepository.save(comandaSaved);
+    }
+
+    public Comanda adicionarProdutos(int comandaId, Set<Integer> idProdutos) {
+        var comanda = getComandaById(comandaId);
+        var listaProdutos = produtoRepository.findAllByIdProduto(idProdutos);
+        comanda.adicionarProdutos(listaProdutos);
+        return comandaRepository.save(comanda);
     }
 }

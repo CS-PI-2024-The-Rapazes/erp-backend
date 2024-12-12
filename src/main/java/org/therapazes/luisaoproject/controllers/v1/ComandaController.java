@@ -1,14 +1,21 @@
 package org.therapazes.luisaoproject.controllers.v1;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.therapazes.luisaoproject.dto.requests.AdicionarProdutoRequest;
 import org.therapazes.luisaoproject.entities.Comanda;
+import org.therapazes.luisaoproject.entities.Produto;
 import org.therapazes.luisaoproject.enums.EComandaStatus;
 import org.therapazes.luisaoproject.services.ComandaService;
+
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,5 +48,19 @@ public class ComandaController {
     @PutMapping
     public Comanda update(@RequestBody Comanda comanda) {
         return comandaService.update(comanda);
+    }
+
+    @Operation(summary = "Adiciona os produtos informados na comanda")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Comanda atualizada"),
+            @ApiResponse(responseCode = "400", description = "Erro ao adicionar produtos"),
+            @ApiResponse(responseCode = "404", description = "Comanda ou produto não encontrado")
+    })
+    @PutMapping("/adicionar-produtos")
+    public ResponseEntity<Comanda> adicionarProdutos(@RequestBody AdicionarProdutoRequest request) {
+        return ResponseEntity.ok(
+                comandaService.adicionarProdutos(
+                        request.getIdComanda(),
+                        request.getIdProdutos()));
     }
 }
