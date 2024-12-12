@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.therapazes.luisaoproject.entities.Comanda;
 import org.therapazes.luisaoproject.entities.Produto;
+import org.therapazes.luisaoproject.enums.EComandaStatus;
 import org.therapazes.luisaoproject.repositories.ComandaRepository;
 import org.therapazes.luisaoproject.repositories.ProdutoRepository;
 
@@ -26,6 +27,7 @@ public class ComandaService {
         return comandaRepository.findAll(pageable);
     }
     public Comanda save(Comanda comanda) {
+        comanda.setStatus(EComandaStatus.DISPONIVEL);
         return comandaRepository.save(comanda);
     }
     public void delete(Integer id) {
@@ -35,8 +37,8 @@ public class ComandaService {
     }
     public Comanda update(Comanda comanda) {
         Comanda comandaSaved = comandaRepository.findById(comanda.getIdComanda()).orElseThrow(() -> new NoSuchElementException("Comanda com id " + comanda.getIdComanda() + " não encontrada"));
-        comandaSaved.setDescription(comanda.getDescription());
-        comandaSaved.setName(comanda.getName());
+        comandaSaved.setDescricao(comanda.getDescricao());
+        comandaSaved.setNome(comanda.getNome());
         comandaSaved.setStatus(comanda.getStatus());
         return comandaRepository.save(comandaSaved);
     }

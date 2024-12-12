@@ -33,7 +33,11 @@ public class ProdutoService {
     public Produto updateProduto(Produto produto) {
         Optional<Produto> existingProduto = produtoRepository.findById(produto.getIdProduto());
         if (existingProduto.isPresent()) {
-            return produtoRepository.save(produto);
+            try {
+                return produtoRepository.save(produto);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
         }
         return null;
     }
