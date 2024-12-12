@@ -1,5 +1,6 @@
 package org.therapazes.luisaoproject.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -40,6 +41,7 @@ public class Produto {
     @Column(name = "imagem", columnDefinition = "LONGBLOB")
     private byte[] imagem;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "id_categoria")
     private Categoria categoria;

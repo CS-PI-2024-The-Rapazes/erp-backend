@@ -22,10 +22,10 @@ public class Comanda {
     private Integer idComanda;
 
     @Column(name = "descricao")
-    private String description;
+    private String descricao;
 
     @Column(name = "nome")
-    private String name;
+    private String nome;
 
     @Column(name = "valor_total")
     private double valorTotal;
