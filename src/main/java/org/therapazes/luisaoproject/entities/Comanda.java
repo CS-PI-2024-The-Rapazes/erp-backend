@@ -65,6 +65,7 @@ public class Comanda {
 
                 this.produtosComanda.add(pc);
             }
+            this.setStatus(EComandaStatus.OCUPADA);
 
             this.valorTotal = this.produtosComanda.stream()
                     .mapToDouble(ProdutosComanda::getTotal)
