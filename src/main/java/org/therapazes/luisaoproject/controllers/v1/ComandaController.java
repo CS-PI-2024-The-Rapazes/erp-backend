@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.therapazes.luisaoproject.dto.requests.AdicionarProdutoRequest;
 import org.therapazes.luisaoproject.entities.Comanda;
 import org.therapazes.luisaoproject.entities.Produto;
 import org.therapazes.luisaoproject.enums.EComandaStatus;
@@ -62,7 +63,10 @@ public class ComandaController {
             @ApiResponse(responseCode = "404", description = "Comanda ou produto não encontrado")
     })
     @PutMapping("/adicionar-produtos")
-    public ResponseEntity<Comanda> adicionarProdutos(@RequestParam("comandaId") int comandaId, @RequestBody Set<Produto> produtos) {
-        return ResponseEntity.ok(comandaService.adicionarProdutos(comandaId, produtos));
+    public ResponseEntity<Comanda> adicionarProdutos(@RequestBody AdicionarProdutoRequest request) {
+        return ResponseEntity.ok(
+                comandaService.adicionarProdutos(
+                        request.getIdComanda(),
+                        request.getIdProdutos()));
     }
 }
