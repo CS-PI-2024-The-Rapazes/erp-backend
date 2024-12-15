@@ -28,6 +28,12 @@ public class ComandaController {
         return ResponseEntity.ok(comandaService.getComandaById(id));
     }
 
+    @Operation(summary = "Busca informações de todas as comandas")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Comandas encontradas"),
+            @ApiResponse(responseCode = "400", description = "Erro ao buscar comandas"),
+            @ApiResponse(responseCode = "404", description = "Comandas não encontradas")
+    })
     @GetMapping("/all")
     public ResponseEntity<Page<Comanda>> getAllComanda(@RequestParam(defaultValue = "0") int page,
                                                        @RequestParam(defaultValue = "10") int size) {
