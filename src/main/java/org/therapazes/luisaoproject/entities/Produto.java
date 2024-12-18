@@ -1,12 +1,16 @@
 package org.therapazes.luisaoproject.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.Set;
+
 @Entity
 @Data
 public class Produto {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_produto")
@@ -24,9 +28,6 @@ public class Produto {
     @Column(name = "detalhes")
     private String detalhes;
 
-    @Column(name = "categoria")
-    private Integer categoria;
-
     @Column(name = "data_cadastro")
     private Date dataCadastro;
 
@@ -39,4 +40,12 @@ public class Produto {
     @Lob
     @Column(name = "imagem", columnDefinition = "LONGBLOB")
     private byte[] imagem;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "id_categoria")
+    private Categoria categoria;
+
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<ProdutosComanda> produtosComanda;
 }
