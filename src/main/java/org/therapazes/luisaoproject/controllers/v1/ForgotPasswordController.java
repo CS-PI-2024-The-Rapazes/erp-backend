@@ -12,6 +12,7 @@ import org.therapazes.luisaoproject.dto.ChangePassword;
 import org.therapazes.luisaoproject.dto.VerifyEmailDto;
 import org.therapazes.luisaoproject.services.ForgotPasswordService;
 
+import javax.mail.MessagingException;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,11 +31,14 @@ public class ForgotPasswordController {
     @PostMapping("/verify-mail")
     public ResponseEntity<String> verifyEmail(@RequestBody VerifyEmailDto email) {
         try {
+            // Chama o serviço para verificar e enviar o email de recuperação
             return ResponseEntity.ok(forgotPasswordService.verifyEmail(email.getEmail()));
         } catch (UsernameNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(404).body("Email não encontrado: " + e.getMessage());
+        } catch (MessagingException e) {
+            return ResponseEntity.status(400).body("Erro ao enviar o email: " + e.getMessage());
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(400).body("Erro desconhecido: " + e.getMessage());
         }
     }
 
@@ -47,12 +51,14 @@ public class ForgotPasswordController {
     @PostMapping("/change-password")
     public ResponseEntity<String> changePasswordHandler(@RequestBody ChangePassword changePassword) {
         try {
+            // Chama o serviço para alterar a senha
             return ResponseEntity.ok(forgotPasswordService.changePasswordHandler(changePassword));
         } catch (UsernameNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(404).body("Usuário não encontrado: " + e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(400).body("Erro na mudança de senha: " + e.getMessage());
         } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(400).body("Erro desconhecido: " + e.getMessage());
         }
     }
 }
-
