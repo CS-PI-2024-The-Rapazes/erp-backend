@@ -14,60 +14,106 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
 public class EmailService {
+
+    private static final Logger logger = Logger.getLogger(EmailService.class.getName());
     private final JavaMailSender javaMailSender;
     private final SpringTemplateEngine springTemplateEngine;
 
+    /**
+     * Envia um e-mail com um template Thymeleaf renderizado.
+     * @param to destinatário
+     * @param subject assunto do e-mail
+     * @param variables variáveis para o template
+     * @throws MessagingException erro ao enviar o e-mail
+     */
     @Async
     public void sendEmailWithTemplate(String to, String subject, Map<String, Object> variables) throws MessagingException {
         Context context = new Context();
         context.setVariables(variables);
         String body = springTemplateEngine.process("index", context);
 
-        MailBodyDto mailBodyDto = MailBodyDto.builder()
-                .to(to)
-                .subject(subject)
-                .text(body)
-                .isHtml(true)
-                .build();
+        MailBodyDto mailBodyDto = createMailBodyDto(to, subject, body, true);
 
         sendEmail(mailBodyDto);
     }
 
+    /**
+     * Envia um e-mail com o corpo fornecido.
+     * @param mailBodyDto DTO que contém informações sobre o e-mail a ser enviado
+     * @throws MessagingException erro ao enviar o e-mail
+     */
     @Async
     public void sendEmail(MailBodyDto mailBodyDto) throws MessagingException {
         if (mailBodyDto.isHtml()) {
-            MimeMessage message = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true); // true for multipart
-
-            try {
-                helper.setTo(mailBodyDto.to());
-                helper.setSubject(mailBodyDto.subject());
-                helper.setText(mailBodyDto.text(), true); // true for HTML
-
-                ClassPathResource imageResource = new ClassPathResource("static/images/logoCoxinha.png");
-
-                helper.addInline("logoCoxinha", imageResource);
-
-                javaMailSender.send(message);
-
-            } catch (MessagingException e) {
-                e.printStackTrace();
-            }
-
+            sendHtmlEmail(mailBodyDto);
         } else {
-            SimpleMailMessage message = new SimpleMailMessage();
-
-            message.setTo(mailBodyDto.to());
-            message.setSubject(mailBodyDto.subject());
-            message.setText(mailBodyDto.text());
-
-            javaMailSender.send(message);
+            sendSimpleEmail(mailBodyDto);
         }
     }
 
-}
+    /**
+     * Envia um e-mail HTML com a opção de incluir imagens inline.
+     * @param mailBodyDto DTO com os dados do e-mail
+     * @throws MessagingException erro ao enviar o e-mail
+     */
+    private void sendHtmlEmail(MailBodyDto mailBodyDto) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
+        try {
+            helper.setTo(mailBodyDto.to());
+            helper.setSubject(mailBodyDto.subject());
+            helper.setText(mailBodyDto.text(), true);
+
+            Optional.ofNullable(new ClassPathResource("static/images/logoCoxinha.png"))
+                    .ifPresent(imageResource -> {
+                        try {
+                            helper.addInline("logoCoxinha", imageResource);
+                        } catch (MessagingException e) {
+                            logger.warning("Erro ao adicionar imagem inline: " + e.getMessage());
+                        }
+                    });
+
+            javaMailSender.send(message);
+        } catch (MessagingException e) {
+            logger.severe("Erro ao enviar e-mail HTML: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    /**
+     * Envia um e-mail simples (sem HTML).
+     * @param mailBodyDto DTO com os dados do e-mail
+     */
+    private void sendSimpleEmail(MailBodyDto mailBodyDto) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(mailBodyDto.to());
+        message.setSubject(mailBodyDto.subject());
+        message.setText(mailBodyDto.text());
+
+        javaMailSender.send(message);
+    }
+
+    /**
+     * Cria um DTO para o corpo do e-mail com os parâmetros fornecidos.
+     * @param to destinatário
+     * @param subject assunto do e-mail
+     * @param body corpo do e-mail
+     * @param isHtml se o e-mail deve ser HTML
+     * @return DTO com as informações do e-mail
+     */
+    private MailBodyDto createMailBodyDto(String to, String subject, String body, boolean isHtml) {
+        return MailBodyDto.builder()
+                .to(to)
+                .subject(subject)
+                .text(body)
+                .isHtml(isHtml)
+                .build();
+    }
+}

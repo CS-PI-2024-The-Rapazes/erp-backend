@@ -41,35 +41,89 @@ public class Comanda {
     @OneToMany(mappedBy = "comanda", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ProdutosComanda> produtosComanda;
 
+    /**
+     * Adiciona produtos à comanda.
+     * Se o produto já existe na comanda, a quantidade é aumentada.
+     * Se o produto não existe, ele é adicionado à lista de produtos da comanda.
+     * @param produtos Produtos a serem adicionados
+     */
     public void adicionarProdutos(Set<Produto> produtos) {
         for (Produto produto : produtos) {
-            ProdutosComanda existente = this.produtosComanda.stream()
-                    .filter(pc -> pc.getProduto().equals(produto))
-                    .findFirst()
-                    .orElse(null);
+            ProdutosComanda pcExistente = encontrarProdutoComanda(produto);
 
-            if (existente != null) {
-
-                if(existente.getQuantidade() + 1 == 1001)
-                    throw new RuntimeException("Quantidade máxima de produtos atingida");
-
-                existente.setQuantidade(existente.getQuantidade() + 1);
-                existente.calcularTotal();
+            if (pcExistente != null) {
+                atualizarQuantidadeProduto(pcExistente);
             } else {
-                ProdutosComanda pc = new ProdutosComanda();
-                pc.setComanda(this);
-                pc.setProduto(produto);
-                pc.setQuantidade(1);
-                pc.setPrecoUnitario(produto.getPreco());
-                pc.calcularTotal();
-
-                this.produtosComanda.add(pc);
+                adicionarNovoProduto(produto);
             }
-            this.setStatus(EComandaStatus.OCUPADA);
 
-            this.valorTotal = this.produtosComanda.stream()
-                    .mapToDouble(ProdutosComanda::getTotal)
-                    .sum();
+            atualizarStatusComanda();
+            recalcularValorTotalComanda();
         }
+    }
+
+    /**
+     * Encontra um produto existente na comanda.
+     * @param produto Produto a ser buscado
+     * @return ProdutosComanda ou null se não encontrado
+     */
+    private ProdutosComanda encontrarProdutoComanda(Produto produto) {
+        return this.produtosComanda.stream()
+                .filter(pc -> pc.getProduto().equals(produto))
+                .findFirst()
+                .orElse(null);
+    }
+
+    /**
+     * Atualiza a quantidade do produto existente na comanda.
+     * Se a quantidade atingir o limite, lança uma exceção.
+     * @param produtoComanda Produto da comanda a ter sua quantidade atualizada
+     */
+    private void atualizarQuantidadeProduto(ProdutosComanda produtoComanda) {
+        if (produtoComanda.getQuantidade() >= 1000) {
+            throw new ProdutoComandaException("Quantidade máxima de produtos atingida");
+        }
+        produtoComanda.setQuantidade(produtoComanda.getQuantidade() + 1);
+        produtoComanda.calcularTotal();
+    }
+
+    /**
+     * Adiciona um novo produto à comanda.
+     * @param produto Produto a ser adicionado
+     */
+    private void adicionarNovoProduto(Produto produto) {
+        ProdutosComanda pc = new ProdutosComanda();
+        pc.setComanda(this);
+        pc.setProduto(produto);
+        pc.setQuantidade(1);
+        pc.setPrecoUnitario(produto.getPreco());
+        pc.calcularTotal();
+
+        this.produtosComanda.add(pc);
+    }
+
+    /**
+     * Atualiza o status da comanda para 'OCUPADA'.
+     */
+    private void atualizarStatusComanda() {
+        this.setStatus(EComandaStatus.OCUPADA);
+    }
+
+    /**
+     * Recalcula o valor total da comanda com base nos produtos.
+     */
+    private void recalcularValorTotalComanda() {
+        this.valorTotal = this.produtosComanda.stream()
+                .mapToDouble(ProdutosComanda::getTotal)
+                .sum();
+    }
+}
+
+/**
+ * Exceção personalizada para quando a quantidade máxima de um produto na comanda for atingida.
+ */
+class ProdutoComandaException extends RuntimeException {
+    public ProdutoComandaException(String message) {
+        super(message);
     }
 }
