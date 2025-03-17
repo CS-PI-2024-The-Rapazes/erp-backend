@@ -31,7 +31,6 @@ public class ForgotPasswordController {
     @PostMapping("/verify-mail")
     public ResponseEntity<String> verifyEmail(@RequestBody VerifyEmailDto email) {
         try {
-            // Chama o serviço para verificar e enviar o email de recuperação
             return ResponseEntity.ok(forgotPasswordService.verifyEmail(email.getEmail()));
         } catch (UsernameNotFoundException e) {
             return ResponseEntity.status(404).body("Email não encontrado: " + e.getMessage());
@@ -51,7 +50,6 @@ public class ForgotPasswordController {
     @PostMapping("/change-password")
     public ResponseEntity<String> changePasswordHandler(@RequestBody ChangePassword changePassword) {
         try {
-            // Chama o serviço para alterar a senha
             return ResponseEntity.ok(forgotPasswordService.changePasswordHandler(changePassword));
         } catch (UsernameNotFoundException e) {
             return ResponseEntity.status(404).body("Usuário não encontrado: " + e.getMessage());
