@@ -43,11 +43,6 @@ public class EmailService {
         sendEmail(mailBodyDto);
     }
 
-    /**
-     * Envia um e-mail com o corpo fornecido.
-     * @param mailBodyDto DTO que contém informações sobre o e-mail a ser enviado
-     * @throws MessagingException erro ao enviar o e-mail
-     */
     @Async
     public void sendEmail(MailBodyDto mailBodyDto) throws MessagingException {
         if (mailBodyDto.isHtml()) {
@@ -56,12 +51,7 @@ public class EmailService {
             sendSimpleEmail(mailBodyDto);
         }
     }
-
-    /**
-     * Envia um e-mail HTML com a opção de incluir imagens inline.
-     * @param mailBodyDto DTO com os dados do e-mail
-     * @throws MessagingException erro ao enviar o e-mail
-     */
+    
     private void sendHtmlEmail(MailBodyDto mailBodyDto) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -86,11 +76,7 @@ public class EmailService {
             throw e;
         }
     }
-
-    /**
-     * Envia um e-mail simples (sem HTML).
-     * @param mailBodyDto DTO com os dados do e-mail
-     */
+    
     private void sendSimpleEmail(MailBodyDto mailBodyDto) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(mailBodyDto.to());
@@ -100,14 +86,6 @@ public class EmailService {
         javaMailSender.send(message);
     }
 
-    /**
-     * Cria um DTO para o corpo do e-mail com os parâmetros fornecidos.
-     * @param to destinatário
-     * @param subject assunto do e-mail
-     * @param body corpo do e-mail
-     * @param isHtml se o e-mail deve ser HTML
-     * @return DTO com as informações do e-mail
-     */
     private MailBodyDto createMailBodyDto(String to, String subject, String body, boolean isHtml) {
         return MailBodyDto.builder()
                 .to(to)
